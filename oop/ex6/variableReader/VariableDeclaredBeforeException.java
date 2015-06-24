@@ -1,13 +1,13 @@
 package oop.ex6.variableReader;
 
 /**
- * Same variables can't be declared twice. <br>
+ * Same variables can't be declared twice in the same scope. <br>
  * Example: <br>
  * String a = "Omer"; <br>
  * ... <br>
  * String a = "Ron";
  * 
- * @author 
+ * @author Omer and Ron
  *
  */
 public class VariableDeclaredBeforeException extends VariableException {

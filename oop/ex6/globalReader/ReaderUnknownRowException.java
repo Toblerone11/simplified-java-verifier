@@ -7,7 +7,7 @@ package oop.ex6.globalReader;
  * 2. starts with '//'. <br>
  * 3. Legal variable row. <br>
  * 4. Legal method row.
- * @author Omer & Ron
+ * @author Omer and Ron
  *
  */
 public class ReaderUnknownRowException extends ReaderException {

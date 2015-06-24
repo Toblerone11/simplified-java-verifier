@@ -2,7 +2,7 @@ package oop.ex6.globalReader;
 
 /**
  * Super class of all possible ReaderExceptions.
- * @author Omer & Ron
+ * @author Omer and Ron
  *
  */
 public class ReaderException extends Exception  {

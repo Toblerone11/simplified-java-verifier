@@ -5,7 +5,7 @@ package oop.ex6.variableReader;
  * g.e. <br>
  * 'String line = 10;' <br>
  * 'int number = "God help me!";
- * @author Omer & Ron.
+ * @author Omer and Ron
  *
  */
 public class VariableTypeMismatchException extends VariableException {

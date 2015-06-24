@@ -12,7 +12,11 @@ import oop.ex6.variableReader.Variable;
 import oop.ex6.variableReader.VariableException;
 
 
-
+/**
+ * 
+ * @author Omer and Ron
+ *
+ */
 public class ConditionBlock extends LocalScope {
 
 	

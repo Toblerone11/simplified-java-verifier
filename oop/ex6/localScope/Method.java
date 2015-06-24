@@ -1,6 +1,10 @@
 package oop.ex6.localScope;
 
-
+/**
+ * 
+ * @author Omer and Ron
+ *
+ */
 public class Method {
 
 	/* constants */

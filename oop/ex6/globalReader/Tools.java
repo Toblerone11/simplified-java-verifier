@@ -3,8 +3,14 @@ package oop.ex6.globalReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class of function shared by all class relevant to globalReader.
+ * @author Omer and Ron
+ *
+ */
 public class Tools {
 
+	// Constants
 	public static final int EMPTY_LINE = 1;
 	public static final int COMMENT = 2;
 	public static final int VARIABLE = 3;
@@ -18,25 +24,24 @@ public class Tools {
 	public static final Pattern CONDITION= Pattern.compile(Constants.COND_DECLARE);
 	public static final Pattern RETURN_PATT = Pattern.compile(Constants.RETURN);
 	public static final Pattern CLOSE_BLOCK = Pattern.compile(Constants.CLOSE_SCOPE);
-	
-	public static final Pattern variablePattern = Pattern.compile("(?:\\s*(final)\\s+)?\\b(int|String|double|char|boolean)?"
+	public static final Pattern variablePattern = Pattern.compile("(?:\\s*(final)\\s+)?\\s*\\b(int|String|double|char|boolean)?"
 			+ "\\b((?:\\s*(?:_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)\\s*(?:=(?:\\s*(?:[^," + '"' + ";\\s]++|"
 			+ "[" + '"' + "][^" + '"' + "]++[" + '"' + "])+))?\\s*,)*)\\s*(?:(_[A-Za-z0-9_]+|[A-Za-z]"
 					+ "[A-Za-z0-9_]*)\\s*(?:=(?:\\s*([^," + '"' + ";\\s]+|[" + '"' + "][^" + '"' + "]++[" + '"' + "])+))?\\s*);\\s*");
-	
-	
 	public static Matcher variableMatcher = null;
-	/*  */
+	public static final String EMPTY_LINE_REGEX = "\\s*";
+	public static final String COMMENT_REGEX = "//";
 	
-	public Tools() {
-	}
 	
-	 /* checkLine
-	 * write about it in the readme. open-close
-	 * easy to take care of exceptions and syntes errors.
+	
+	/**
+	 * Checks given line and returns its type in sjava terms.
+	 * @param givenLine
+	 * @param lineNumber
+	 * @return int number to determine line type.
+	 * @throws ReaderUnknownRowException
 	 */
 	public static int checkLine(String givenLine, int lineNumber) throws ReaderUnknownRowException {
-		//System.out.println(lineNumber + " " + givenLine);
 		if (checkForEmptyLine(givenLine)) {
 			return EMPTY_LINE;
 		} else if (checkForCommentLine(givenLine)) {
@@ -67,7 +72,7 @@ public class Tools {
 	 * @return true or false
 	 */
 	private static boolean checkForEmptyLine(String line) {
-		return line.matches("\\s*"); // update the constant here;
+		return line.matches(EMPTY_LINE_REGEX); // update the constant here;
 	}
 	
 	
@@ -77,7 +82,7 @@ public class Tools {
 	 * @return true or false;
 	 */
 	private static boolean checkForCommentLine(String line) {
-		return line.startsWith("//");
+		return line.startsWith(COMMENT_REGEX);
 	}
 	
 	
@@ -94,15 +99,24 @@ public class Tools {
 		}
 	}
 	
+	/**
+	 *  Getter for variable matcher.
+	 * @return variableMatcher
+	 */
 	public static Matcher getVarMatcher() {
 		return variableMatcher;
 	}
 	
+	
+	/**
+	 *  Getter for variable pattern.
+	 * @return variablePattern
+	 */
 	public static Pattern getVarPattern() {
 		return variablePattern;
 	}
 	
-	// CheckLine's function assistant functions - END //
 	
+	// CheckLine's function assistant functions - END //
 	
 }

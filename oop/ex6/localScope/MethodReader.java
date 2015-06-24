@@ -15,7 +15,7 @@ import oop.ex6.variableReader.VariableException;
 
 /**
  * 
- * @author Omer & Ron
+ * @author Omer and Ron
  * 
  */
 public class MethodReader extends LocalScope {
@@ -48,7 +48,7 @@ public class MethodReader extends LocalScope {
 	public void readDeclarationLine(String scopeDeclaration, int lineNum, VarReader varReader)
 			throws LocalScopeException, VariableException {
 		
-		System.out.println(lineNum + " " + scopeDeclaration);
+//		System.out.println(lineNum + " " + scopeDeclaration);
 		/* extract the return type and name of the method */
 		matcher = methodPattern.matcher(scopeDeclaration);
 		matcher.find();
@@ -93,6 +93,7 @@ public class MethodReader extends LocalScope {
 		VarReader varReader = new VarReader(varsTable);
 		matcher = methodPattern.matcher(currentLine);
 		matcher.find();
+		String type = matcher.group(1);
 		String name = matcher.group(2);
 		
 		String[] types = this.methodsTable.get(name).getMethodArgTypes();

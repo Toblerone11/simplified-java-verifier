@@ -17,7 +17,7 @@ import oop.ex6.variableReader.VariableException;
  * this class used as super class in order to handle methods and if/while loop in s-java files.
  * in general, this class related to the parts of the code in which there is local variables that
  * should be undefined outside their scopes.
- * @author Ron
+ * @author Omer and Ron
  *
  */
 public class LocalScope {

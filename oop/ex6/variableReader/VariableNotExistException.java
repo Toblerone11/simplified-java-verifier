@@ -2,7 +2,7 @@ package oop.ex6.variableReader;
 
 /**
  * Thrown if variable was not declared before.
- * @author 
+ * @author Omer and Ron
  *
  */
 public class VariableNotExistException  extends VariableException {

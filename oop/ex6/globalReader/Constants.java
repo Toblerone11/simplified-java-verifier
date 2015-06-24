@@ -1,5 +1,11 @@
 package oop.ex6.globalReader;
 
+/**
+ * Class of constants shared by all classes relevant to activity
+ * of Reader.
+ * @author Omer and Ron
+ *
+ */
 public class Constants {
 
 	/* constants */
@@ -8,6 +14,24 @@ public class Constants {
 	public static final String LAZY = "?", POSSESS = "+";
 	public static final String COMMENT = "//";
 	public static final String NUMBER = "(?:-)?\\d+(?:\\.\\d+)?+";
+	
+	// ron updated where necessary with this variables.
+	public static final String INT_TYPE = "int";
+	public static final String DOUBLE_TYPE = "double";
+	public static final String STRING_TYPE = "String";
+	public static final String BOOLEAN_TYPE = "boolean";
+	public static final String CHAR_TYPE = "char";
+	public static final String DIMC = "DIMC"; // DIMC = Defined in method call.
+	public static final String INT_TYPE_REGEX = "-?\\d+";
+	public static final String DOUBLE_TYPE_REGEX = "-?\\d+|-?\\d+(\\.)\\d+";
+	
+	public static final String STRING_BEGINNING_CHAR = "\"";
+	public static final String STRING_ENDING_CHAR = "\"";
+	public static final String CHAR_BEGINNING_CHAR = "\'";
+	public static final String CHAR_ENDING_CHAR = "\'";
+	
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
 	
 	//scope regex
 	public static final String RETURN = "\\s*return;\\s*";

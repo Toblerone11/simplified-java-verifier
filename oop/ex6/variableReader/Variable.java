@@ -1,19 +1,21 @@
 package oop.ex6.variableReader;
-//import Method;
 
+import oop.ex6.globalReader.Constants;
 
+/**
+ * Class representing any sjava variable.
+ * @author Omer and Ron
+ *
+ */
 public class Variable {
 
-	/* constants */
-	
-	
 	/* data members */
-	private String isFinal;
-	private String type;
-	private String name;
-	private String value;
-	private int rowDecalred;
-	private boolean isDefined; // means variable was assigned value;
+	protected String isFinal;
+	protected String type;
+	protected String name;
+	protected String value;
+	protected int rowDecalred;
+	protected boolean isDefined; // means value was assigned;
 	
 	
 	/**
@@ -32,63 +34,29 @@ public class Variable {
 		rowDecalred = givenRowDecalred;
 		isDefined = false;
 		
-//		System.out.println(isFinal);
 		
 		if (getIsFinal() && value == null) {
 			throw new VariableFinalIsNotInitializedException(rowDecalred);
 		}
 		
 		
-		// Check for variable type mismatch exception
 		if (value != null) {
 			isDefined = true;
 			
-			/*
-			 * If variables are given the function as parameters
-			 * The program treats them as defined variables and
-			 * dont check for type mismatch.
-			 */
-			if (value.equals("DIMC")) { // DIMC = Defined in method call 
-//				value = null;
-				// Dont check for type mismatch
+			if (value.equals(Constants.DIMC)) { // DIMC = Defined in method call. More in README.
+				// Do not check for type mismatch
 				
-			} else {
-				switch (type) {
-				case "int":
-					if (value.matches("-?\\d+") == false) {
-						throw new VariableTypeMismatchException(rowDecalred);
-					};
-					break;
-				case "double":
-					if (value.matches("-?\\d+|-?\\d+(\\.)\\d+") == false) {
-						throw new VariableTypeMismatchException(rowDecalred);
-					}
-					break;
-				case "String":
-					if (!(value.startsWith("\"") && value.endsWith("\""))) {
-						throw new VariableTypeMismatchException(rowDecalred);
-					}
-					break;
-				case "boolean":
-					if  (! ( (value.equals("false") ) || (value.equals("true") || value.matches("-?\\d+|-?\\d+(\\.)\\d+")) ) ) {
-						throw new VariableTypeMismatchException(rowDecalred);
-					}
-					break;
-				case "char":
-					if (!(value.startsWith("\'") && value.endsWith("\'") && (value.length()==3))) {
-						throw new VariableTypeMismatchException(rowDecalred);
-					}
-					break;
-				default: throw new VariableTypeMismatchException(rowDecalred);
-				}
+			} else { // Check for type mismatch.
+				checkIfValueInCorrectType();
 			}
 		}
 
-//		System.out.println(toString());
 		
 	}
 	
-	/* methods */	
+	/* methods */
+	
+	
 	/**
 	 * type getter
 	 * @return the type of the variable;
@@ -97,6 +65,7 @@ public class Variable {
 		return type;
 	}
 	
+	
 	/**
 	 * name getter
 	 * @return the name of the variable;
@@ -104,6 +73,7 @@ public class Variable {
 	public String getName() {
 		return name;
 	}
+	
 	
 	/**
 	 * isFinal getter
@@ -117,6 +87,7 @@ public class Variable {
 		}
 	}
 	
+	
 	/**
 	 * value getter.
 	 * @return value
@@ -124,6 +95,7 @@ public class Variable {
 	public String getValue() {
 		return value;
 	}
+	
 	
 	/**
 	 * isDefined getter.
@@ -133,14 +105,57 @@ public class Variable {
 		return isDefined;
 	}
 	
+	
+	/**
+	 * Setter for isDefined.
+	 * @param value
+	 */
 	public void setIsDefined(boolean value) {
 		isDefined = value;
 	}
 	
 	
-	public String toString() {
-		return "Variable name is: " + name + " Type is: " + type +  " Value is: " + value + " Is final: " + getIsFinal() + " isDefined:" + getIsDefined();
-		
+	/**
+	 * Checks if value given to variable is in the correct format.
+	 * @throws VariableTypeMismatchException
+	 */
+	private void checkIfValueInCorrectType() throws VariableTypeMismatchException {
+		switch (type) {
+		case Constants.INT_TYPE:
+			if (value.matches(Constants.INT_TYPE_REGEX) == false ) {
+				throw new VariableTypeMismatchException(rowDecalred);
+			};
+			break;
+		case Constants.DOUBLE_TYPE:
+			if (value.matches(Constants.DOUBLE_TYPE_REGEX) == false ) {
+				throw new VariableTypeMismatchException(rowDecalred);
+			}
+			break;
+		case Constants.STRING_TYPE:
+			if (!(value.startsWith(Constants.STRING_BEGINNING_CHAR) && value.endsWith(Constants.STRING_ENDING_CHAR))) {
+				throw new VariableTypeMismatchException(rowDecalred);
+			}
+			break;
+		case Constants.BOOLEAN_TYPE:
+			if  (! ( (value.equals(Constants.FALSE) ) || (value.equals(Constants.TRUE) || value.matches(Constants.DOUBLE_TYPE_REGEX)) ) ) {
+				throw new VariableTypeMismatchException(rowDecalred);
+			}
+			break;
+		case Constants.CHAR_TYPE:
+			if (!(value.startsWith(Constants.CHAR_BEGINNING_CHAR) && value.endsWith(Constants.CHAR_ENDING_CHAR) && (value.length()==3))) {
+				throw new VariableTypeMismatchException(rowDecalred);
+			}
+			break;
+		default: throw new VariableTypeMismatchException(rowDecalred);
+		}
 	}
+	
+
+	public String toString() {
+		return "Variable name is: " + name + " Type is: " + 
+				type +  " Value is: " + value + " Is final: " + getIsFinal() +
+				" isDefined:" + getIsDefined();
+	}
+	
 	
 }

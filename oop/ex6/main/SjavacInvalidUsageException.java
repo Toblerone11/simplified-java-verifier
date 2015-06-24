@@ -1,8 +1,8 @@
 package oop.ex6.main;
 
 /**
- * Invalid usage - no arguments were given.
- * @author Omer & Ron
+ * Exception class for 'Invalid usage' - no arguments given.
+ * @author Omer and Ron
  *
  */
 public class SjavacInvalidUsageException extends SjavacException {
@@ -10,6 +10,5 @@ public class SjavacInvalidUsageException extends SjavacException {
 	
 	public SjavacInvalidUsageException() {
 		System.err.println("Usage: java oop.ex6.main.Sjavac file.sjava");
-		
 	}
 }

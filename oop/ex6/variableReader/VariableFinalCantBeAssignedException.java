@@ -2,7 +2,7 @@ package oop.ex6.variableReader;
 
 /**
  * Thrown if there is a try to change the value of a final variable.
- * @author 
+ * @author Omer and Ron
  *
  */
 public class VariableFinalCantBeAssignedException extends VariableException {

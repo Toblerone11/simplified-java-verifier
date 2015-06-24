@@ -2,7 +2,7 @@ package oop.ex6.main;
 
 /**
  * Super class of all possible SjavacExceptions.
- * @author Omer & Ron
+ * @author Omer and Ron
  *
  */
 public class SjavacException extends Exception {
