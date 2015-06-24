@@ -1,0 +1,243 @@
+omerzelig
+toblerone
+
+
+
+=============================
+=      File description     =
+=============================
+
+##### package: main #####
+Sjavac.java - 					The main class of the program.
+SjavacException.java - 			Super class of all possible SjavacExceptions.
+SjavacInvalidUsageException - 	Exception class for 'Invalid usage'
+		- no arguments given.
+
+##### package: globalReader #####
+Reader.java - 			Class of the main program reader.
+Tools.java - 			Class for specific method
+		shared by all class relevant to globalReader.
+Constants.java- 		Class of constants shared by all classes relevant to 
+		activity of Reader.
+ReaderException.java - Super class of all possible ReaderExceptions.
+ReaderUnknownRowException.java - Thrown if Reader reads non sjava line.
+
+##### package: variableReader #####
+Variable.java - Class representing any sjava variable.
+VarReader.java - Class handles variable sjava line.
+VariableException.java - Super class of all possible VariableExceptions.
+VariableDeclaredBeforeException.java - Same variables can't be declared twice
+		in the same scope.
+VariableFinalCantBeAssignedException.java - Thrown if there is a try to change
+		the value of a final variable.
+VVariableFinalIsNotInitializedException.java - Thrown if final variable is
+		declared and not given a value. 
+VariableNotExistException.java - Thrown if variable was not declared before.
+ariableTypeMismatchException.java - This exception occurs if one variable type
+		gets illegal value type.
+VariableUnableToIntializeException.java - Thrown if we try to assign variable1
+		value of variable2 but variable2 was not initialized.
+
+##### package: localScope #####
+LocalScope.java - 	super class of all local scopes possible in Sjava file.
+		manages the parsing over any local scope
+ConditionBlockReader.java - class for taking care in unique cases
+		of condition blocks
+MethodReader.java - class for taking care in unique cases of method's scopes.
+Method.java -	class representing a method defined in a Sjava file.
+LocalScopeException.java -	class for raising errors for any illegal assignment
+		in asome iiner scope.
+MethodException.java - raising errors for any issue that may occur during
+		the parsing over some method definition.
+
+
+
+=============================
+=          Design           =
+=============================
+
+    # 1. Handling Errors:
+    # Exceptions hierarchy mechanism is used to handle exceptions.
+    # Every package has his own super exception.
+    # Each specific exception extends the super exception.
+    # Implicit up-casting is being used to throw necessary exceptions.
+
+    # The Sjavac.java catches the different exceptions and prints
+    # the necessary. In this program only '0', '1' or '2',
+    # but because every package has his own exceptions,
+    # extending the program with more exception is simple.
+
+    # The four main exceptions in this program:
+    # a. SjavacException - handles main program exceptions.
+    # b. ReaderException - handles all parser exceptions
+    # c. VariableReaderException - handles exception relevant to variables
+		 mechanism.
+    # d. LocalScopeException - handles exception relevant to methods,
+         if & while mechanism.
+
+    # Every specific exception prints the relevant error and the
+    # line it occurred. Therefore, allowing the user easily
+    # understanding where and what are the errors about.
+
+    # We designed it that way:
+    # 1. Each part of the program has its own errors and respectively
+    # we built the exceptions to match them.
+    # 2. Easily use up-casting mechanism.
+    # 3. Easy extending.
+    # 4. Friendly to the developer - easy to debug, 
+    # expanding depends only on the different types of error may occur.
+    # The main gets any exception via the super exception class. 
+    # 5. Friendly to the user - very elaborated messages on each error.
+
+    # 2. About the design:
+    # 1. main(sjava.c) - runs the program.
+	#     2. globalReader	- The main reader class.
+	# 	    2.1 VarReader
+	# 	    2.2 LocalScoop
+	# 		    2.2.1 method reader
+	# 		    2.2.2 while & if reader
+
+    # Main points:			
+
+    # reader has only 1 public function read() which runs on given path of
+    # sjava file. Desgin which is easy to understand (Encapsulation).
+    
+    # Same point for VarReader analyzeLine()
+
+    # checkLine: in tools.
+    # Keeps the open close principle, easy to extend, there is one function
+	#	that recognize the lines. if we would like to check more complex files.
+	#	the new lines can be easily appended to the checkLine method in its
+	#	'switch' block as a new case.
+	#Constants: In Addition to Tools, there is a single class which contains
+	#	all regexes that being used in the program. the new cases can easily 
+	#	add new regexes or just build them of the other regex component defined
+	#	earlier in the class. this also keeps the modularity of the regex's and
+    # make the expressions easy to understand by other dev's.
+
+
+	# The design is modular and fulfils the main modular principles:
+	# Decomposability - VarReader and LocalScoop specific cases
+	# that globalReader need to handle. They are independent from
+	# the rest of the program.
+	# Composability - Constants, VarReader and LocalScoop are 
+	# each autonomous and can be used and be debugged separately.
+	# Understandability - Each module is easy to understand without 
+	# knowing much about the others.
+	# Modular Continuity - lecture 8
+	# Open-Closed princple -
+	# The single-Chocie princple.
+
+    # while & if reader is beneath LocalScoop because while & if blocks
+    # are always inside a method block.
+	
+	# in case we want to add another kind of scopes, it can inherit from local
+	# scope its general methods for scopes, and take care only in unique cases.
+	# the switch block and the checkLine method that mainly being used during
+	# the parsing process, are easily extend-able as discussed before.
+
+    # Modifing the code to new variable type:
+    # Editing Variable class to support the new type,
+    # which means updating checkIfValueInCorrectType() and also the
+    # necessary Regex in the 'Constants' class.
+    # There is no need to update checkLine() in Tools, because as we update
+    # the Variable Regex constant, checkLine() will be able to recognize
+    # the new variable type.
+
+    # Upgrading the code to support Arrays will be done by
+    # creating new Array class which can hold one legal type of sjava vars.
+    # The class will hold a correspond java Array. 
+    # The class will have add(), contains(), delete(), get() and 
+    # will allow iteration. Checks will be done for add()
+    # to make sure the legal variable type is inserted.
+    # Reference to discover Array will be done also in Reader.read() and in
+    # Tools.readLine() as those function handle reading lines from the
+    # given text.
+
+    # upgrading the code to support switch statements - can be implemented by:
+	# - adding subclass 'SwitchReader' to LocalScope.
+	# - the 'case' and 'switch' lines will be added to 'checkList' method as
+	#   additional line types, and their regex will be stored in 'Conatants'.
+	# - the instance will create a hash map that its key is Object of the same
+	#   type of the variable that was given to the switch.
+	# - the 'readDeclarationLine' method will be defined to this subclass to 
+	#   perform first iteration over the block.
+	# - in the iteration - if 'case' line was reached - the constant of the
+	#	case is stored in the hash map and the line number stored as its value.
+	# - because switch cases have to be constants there is no problem with that.
+	# - any other line (which is between the different cases) will be parsed
+	#   using the already existing process of checkScope.
+	# - the 'enterScope' will be implemented to perform a second iteration.
+	# - this iteration will iterate over the hash map values and will check
+	#	any case using the 'readScope' method.
+	# - all those methods that should be implemented are abstract in LocalScope
+	#   for this purposes. In addition, this process is recursive, therefore,
+	#   any inner scopes that will be reach, won't disturb the method parseing
+	#	process.
+
+
+=============================
+=  Implementation details   =
+=============================
+
+
+    # About DIMC(Defined in method call) in Variable:
+    # If variables are given the function as parameters
+    # The program treats them as defined variables and
+    # do not check for type mismatch.
+
+    # About Constants in globalReader:
+    # as there are many constants in this program, we decdided a class
+    # should be dedeciated only for them.
+    # There are some constants in other classes, but the MAIN ones who are
+    # shared through all over classes and sub classes relevant to the Reader
+    # and his concept are stored there.
+
+    # About Tools in GlobalReader:
+    # Class holds function which are shared by all the classess
+    # relevant to Reader and his concept. for example, readLine()
+    # method which checks if every line is legal sjava line
+    # and returns number which represents the type of the line (variable,
+    #  method, etc).
+
+    # regex 1 - METHOD_RECOGNIZER.
+	# this regex assembled of RETURN_TYPE regex, METHOD_LEGAL_NAME regex and
+	# METHOD_ARG regex (which contains type and name).
+	# each one of those regexes is designed to support only legal string of
+	# what their patterns are represent.
+	# the regex is composed as there is three cases for given arguments - 
+	# few arguments - the expression inside the parenthesis start by group of
+	# METHOD_ARG optional space ','. this group can be repeated infinite number
+	# 	  of times. after that additional METHOD_ARG must appear after ',' and
+	#     before '\\)'.
+	# one argument - because the former can apear zero untill infinite times,
+	# zero times will leave the single argument after the ','.
+	# no arguments - thus all the regex inside the '\\(' and '\\)' is wrapped by
+	#      parenthesis and can be shown 1 time or no times at all - using '?'.
+	
+
+    # regex 2 - CONDITION (declaration of 'while' or 'if' statements).
+	# this regex very much the same as the above with simple difference that
+	# instead METHOD_ARG there is choice between LEGAL_NAME and EXPLICIT_VALUE,
+	# both can be shown in a condition statement. then the ',' had bee replaced
+	# by choice between '&&' or '||'. this can appear zero or more times but
+	# after that there must appear another value. all of this must be shown
+	# one time only - using {1}.
+
+    # About the data structure for storing variables.
+    # HastMap was chosen of two main reasons:
+    # 1. Action take O(1)
+    # 2. Easy to store variable and get them by name.
+
+    # VarReader has two hashTables, one is local and one is global.
+    # as VarReader can be called on every scope, on every call he gets
+    # the global hash table so he knows which variables were declared before.
+    # Using two tables helps to manage the different caseses that might
+    # occur.
+
+
+
+=============================
+=    Answers to questions   =
+=============================
+
