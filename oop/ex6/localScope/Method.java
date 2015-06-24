@@ -1,6 +1,9 @@
 package oop.ex6.localScope;
 
 /**
+ * this class represents a method definition.
+ * each instance of this class stores the method name, its return type and two lists of 
+ * types and names, sorted respectively, of the method's arguments, that should be given to it.
  * 
  * @author Omer and Ron
  *

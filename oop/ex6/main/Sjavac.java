@@ -9,7 +9,7 @@ import oop.ex6.variableReader.VariableException;
 
 
 /**
- * The main class of the program.
+ * The main class of the program. checks for legality of given sjava file.
  * @author Omer and Ron
  *
  */
@@ -18,8 +18,7 @@ public class Sjavac {
 	// Constants
 	public static final String CODE_LEGAL_MESSAGE = "0";
 	public static final String CODE_ILLEGAL_MESSAGE = "1";
-	public static final String IO_ERROR_MESSAGE = "2*)";
-	
+	public static final String IO_ERROR_MESSAGE = "2";
 	
 	/**
 	 * The class running the program.

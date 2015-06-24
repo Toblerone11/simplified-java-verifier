@@ -26,7 +26,8 @@ public class Variable {
 	 * @param givenValue
 	 * @throws Exception
 	 */
-	public Variable(String givenFinal, String givenType, String givenName, String givenValue, int givenRowDecalred) throws VariableException {
+	public Variable(String givenFinal, String givenType, String givenName, String givenValue, int givenRowDecalred)
+			throws VariableException {
 		isFinal = givenFinal;
 		type = givenType;
 		name = givenName;
@@ -137,12 +138,14 @@ public class Variable {
 			}
 			break;
 		case Constants.BOOLEAN_TYPE:
-			if  (! ( (value.equals(Constants.FALSE) ) || (value.equals(Constants.TRUE) || value.matches(Constants.DOUBLE_TYPE_REGEX)) ) ) {
+			if  (! ( (value.equals(Constants.FALSE) ) || (value.equals(Constants.TRUE) || 
+					value.matches(Constants.DOUBLE_TYPE_REGEX)) ) ) {
 				throw new VariableTypeMismatchException(rowDecalred);
 			}
 			break;
 		case Constants.CHAR_TYPE:
-			if (!(value.startsWith(Constants.CHAR_BEGINNING_CHAR) && value.endsWith(Constants.CHAR_ENDING_CHAR) && (value.length()==3))) {
+			if (!(value.startsWith(Constants.CHAR_BEGINNING_CHAR) && value.endsWith(Constants.CHAR_ENDING_CHAR) &&
+					(value.length()==3))) {
 				throw new VariableTypeMismatchException(rowDecalred);
 			}
 			break;

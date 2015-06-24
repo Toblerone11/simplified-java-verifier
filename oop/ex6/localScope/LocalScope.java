@@ -14,25 +14,31 @@ import oop.ex6.variableReader.VariableException;
 
 
 /**
- * this class used as super class in order to handle methods and if/while loop in s-java files.
- * in general, this class related to the parts of the code in which there is local variables that
+ * this class used as abstract super class of kinds of local scopes, that can appear in the code.
+ * for now it is extended to methods definition scopes and condition scopes (if or while).
+ * this class bequathing methods in order handle code assignments which can appear in local scopes.
+ * 
+ * In addition, this class preserves the global variables and interact with VarReader in order
+ * to maintain the local varaibles of some scope for this scope only, means that local variables
  * should be undefined outside their scopes.
  * @author Omer and Ron
  *
  */
-public class LocalScope {
+public abstract class LocalScope {
 
-	
 	/* constants */
 	protected static final int METHOD = 1, CONDITION = 2;
-	protected static final Pattern BLOCK_CLOSER = Pattern.compile(Constants.CLOSE_SCOPE);
+	//patterns - methods
 	protected static final Pattern METHOD_CALL = Pattern.compile(Constants.METHOD_CALL);
 	protected static final Pattern RETURN = Pattern.compile(Constants.RETURN);
-	protected static final Pattern VAR_PATTERN = Pattern.compile(Constants.LEGAL_VAR);
-	protected static final Pattern EMPTY = Pattern.compile(Constants.OPT_SPACE);
 	protected static final Pattern ARG_PATTERN = Pattern.compile(Constants.METHOD_CALL_ARG);
-	protected static final Pattern EXPLICIT_ARG = Pattern.compile(Constants.NUMBER);
+	protected static final Pattern EXPLICIT_ARG = Pattern.compile(Constants.METHOD_EXPLICIT_ARG);
+	//variables
+	protected static final Pattern VAR_PATTERN = Pattern.compile(Constants.LEGAL_VAR);
+	//different
 	protected static final String COMMENT = "//";
+	protected static final Pattern BLOCK_CLOSER = Pattern.compile(Constants.CLOSE_SCOPE);
+	protected static final Pattern EMPTY = Pattern.compile(Constants.OPT_SPACE);
 	
 	/* data members */
 	protected BufferedReader reader;
@@ -42,6 +48,9 @@ public class LocalScope {
 	private int lineNumber;
 	protected VarReader varReader;
 	
+	/**
+	 * default C'tor
+	 */
 	public LocalScope() {
 		this.reader = null;
 		this.methodsTable = new HashMap<String, Method>();
@@ -76,7 +85,7 @@ public class LocalScope {
 			case (Tools.METHOD_DECLARTION):
 				throw new LocalScopeException("invalid method declaration in a local scope. line : " + lineNum);
 			case (Tools.IF_OR_WHILE):
-				ConditionBlock condReader = new ConditionBlock(methodsTable); 
+				ConditionBlockReader condReader = new ConditionBlockReader(methodsTable); 
 				condReader.checkScope(line, reader, lineNum);
 				lineNum = lineNumber;
 				break;
@@ -99,6 +108,27 @@ public class LocalScope {
 		lineNumber = lineNum;
 		return reader;
 	}
+	
+	/**
+	 * this method contains the activation of the readScope method.
+	 * the method "prepare the ground" before reading the scope and contains unique
+	 * assignments. each sub class define this method for their own purposes.
+	 * 
+	 * @param currentLine the declaration line of this scope - the if / while line.
+	 * @param bReader the buffered reader of the Sjava file.
+	 * @param lineNum the counter of the lines that had been read.
+	 * @param varsTable a hash map of the previous variables that was declared at the global
+	 * scope and in outer scopes of this scope
+	 * @return the buffered reader after reading the whole scope - updated.
+	 * @throws IOException in case of problem with reading a specific line.
+	 * @throws LocalScopeException in case of some illegal line or assignment has been read.
+	 * raising a detailed note ofthe specific problem with the line number.
+	 * @throws ReaderUnknownRowException in case line which hasn't been recognize.
+	 * @throws VariableException in case of wrong use with variables.
+	 */
+	public abstract BufferedReader enterScope(String currentLine, BufferedReader bReader, int lineNum,
+			HashMap<String, Variable> varsTable) 
+			throws IOException, LocalScopeException, ReaderUnknownRowException, VariableException;
 
 	/**
 	 * reads the scope. checks the syntax of each line and handle all cases.
@@ -112,9 +142,12 @@ public class LocalScope {
 	 * @throws ReaderUnknownRowException in case of unknown lines.
 	 * @throws VariableException 
 	 */
-	public BufferedReader readScope(String currentLine, BufferedReader bReader, int lineNum, VarReader varReader) 
+	protected BufferedReader readScope(String currentLine, BufferedReader bReader, int lineNum, VarReader varReader) 
 			throws IOException, LocalScopeException, ReaderUnknownRowException, VariableException {
 		/* creating new VarReader instance to handle variables assignments */
+		
+		//System.out.println(varReader.getGlobalTable().keySet().toString());
+		
 		reader = bReader;
 		String line = reader.readLine();
 		lineNum++;
@@ -125,8 +158,8 @@ public class LocalScope {
 			case (Tools.METHOD_DECLARTION):
 				throw new LocalScopeException("invalid method declaration in a local scope. line : " + lineNum);
 			case (Tools.IF_OR_WHILE):			
-				ConditionBlock conditionBlock = new ConditionBlock(methodsTable);
-				conditionBlock.readConditionScope(line, reader, lineNum, varReader.getGlobalTable());
+				ConditionBlockReader conditionBlock = new ConditionBlockReader(methodsTable);
+				conditionBlock.enterScope(line, reader, lineNum, varReader.getGlobalTable());
 				lineNum = lineNumber;
 				break;
 			case (Tools.EMPTY_LINE):
@@ -201,8 +234,7 @@ public class LocalScope {
 			return false;
 		String[] expectedArgs = methodsTable.get(methodName).getMethodArgTypes();
 		Matcher argMatch = ARG_PATTERN.matcher(calledArgs);
-		//System.out.println(ARG_PATTERN);
-		//System.out.println(calledArgs);
+
 		int numOfArgs = 0;
 		while (argMatch.find()) {
 			String argName = calledArgs.substring(argMatch.start(), argMatch.end());
@@ -225,6 +257,10 @@ public class LocalScope {
 		return true;
 	}
 	
+	/**
+	 * getter of the line number counter.
+	 * @return
+	 */
 	public int getLineNumber() {
 		return lineNumber;
 	}
