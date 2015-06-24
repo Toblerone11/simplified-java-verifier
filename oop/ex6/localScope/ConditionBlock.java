@@ -26,10 +26,25 @@ public class ConditionBlock extends LocalScope {
 	private static final Pattern NUMBER_COND = Pattern.compile("\\s*" + Constants.NUMBER + "\\s*");
 	private static final Pattern VAR_COND = Pattern.compile("\\s*(" + Constants.LEGAL_NAME + "|" + Constants.NUMBER + ")\\s*");
 	private static final Pattern COMPLEX_COND = Pattern.compile(Constants.CONDITION);
+	
 	public ConditionBlock() {
 		super();
 	}
+	
+	public ConditionBlock(HashMap<String, Method> methodsTable) {
+		this.methodsTable = methodsTable;
+	}
 
+	@Override
+	public BufferedReader checkScope(String currentLine, BufferedReader bReader, int lineNum)
+			throws IOException, ReaderUnknownRowException, LocalScopeException, VariableException {
+		
+		/* checks the declaration of the scope */	
+		readDeclarationLine(currentLine, lineNum, varReader);
+		return super.checkScope(currentLine, bReader, lineNum);
+	}
+	
+	
 	@Override
 	public void readDeclarationLine(String scopeDeclaration, int lineNum, VarReader varReader)
 			throws LocalScopeException, VariableException {
@@ -101,12 +116,12 @@ public class ConditionBlock extends LocalScope {
 	 * @return true if legal boolean value, false otherwise.
 	 */
 	private boolean isExplicitLegalVar(String valName) {
-		
+
 		//check if the given argument is not a variable - but explicit value;
 		if (NUMBER_COND.matcher(valName).matches()) {
 			return true;
 		}
-		else if ((valName.equals("true")) || (valName.equals("false")))
+		else if ((valName.contains("true")) || (valName.contains("false")))
 			return true;
 		
 		return false;

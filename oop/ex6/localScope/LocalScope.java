@@ -64,8 +64,7 @@ public class LocalScope {
 	public BufferedReader checkScope(String currentLine, BufferedReader bReader, int lineNum)
 			throws IOException, ReaderUnknownRowException, LocalScopeException, VariableException {
 		/* checks the declaration of the scope */	
-		
-		readDeclarationLine(currentLine, lineNum, varReader);
+
 		this.reader = bReader;
 		String line = reader.readLine();
 		lineNum++;
@@ -77,7 +76,9 @@ public class LocalScope {
 			case (Tools.METHOD_DECLARTION):
 				throw new LocalScopeException("invalid method declaration in a local scope. line : " + lineNum);
 			case (Tools.IF_OR_WHILE):
-				checkScope(currentLine, reader, lineNum);
+				ConditionBlock condReader = new ConditionBlock(methodsTable); 
+				condReader.checkScope(line, reader, lineNum);
+				lineNum = lineNumber;
 				break;
 			case (Tools.EMPTY_LINE):
 				break;
@@ -124,8 +125,9 @@ public class LocalScope {
 			case (Tools.METHOD_DECLARTION):
 				throw new LocalScopeException("invalid method declaration in a local scope. line : " + lineNum);
 			case (Tools.IF_OR_WHILE):			
-				ConditionBlock conditionBlock = new ConditionBlock();
+				ConditionBlock conditionBlock = new ConditionBlock(methodsTable);
 				conditionBlock.readConditionScope(line, reader, lineNum, varReader.getGlobalTable());
+				lineNum = lineNumber;
 				break;
 			case (Tools.EMPTY_LINE):
 				break;
@@ -135,7 +137,7 @@ public class LocalScope {
 				varReader.analyzeLine(line, Tools.getVarMatcher() , lineNum);
 				break;
 			case (Tools.RETURN):
-				handleReturn();
+				handleReturn(lineNum);
 				return reader;
 			case (Tools.METHOD_CALL):
 				if(!handleMethodCall(line, varReader.getGlobalTable()))
@@ -169,14 +171,16 @@ public class LocalScope {
 	 * @throws LocalScopeException in case there is some assignment after the return line
 	 * @throws IOException
 	 */
-	public void handleReturn() throws LocalScopeException, IOException {
+	public void handleReturn(int lineNum) throws LocalScopeException, IOException {
 		String line = reader.readLine();
+		lineNum++;
 		while (!BLOCK_CLOSER.matcher(line).matches()) {
 			if (!((EMPTY.matcher(line).matches()) || (line.startsWith(COMMENT)))) {
 				throw new LocalScopeException(
 						"operations after return line in the same block are not allowed");
 			}
 		}
+		lineNumber = lineNum;
 	}
 	
 	/**
@@ -192,7 +196,7 @@ public class LocalScope {
 		if (matcher.groupCount() > 1) {
 			calledArgs = matcher.group(2); 
 		}
-		
+
 		if (!methodsTable.containsKey(methodName))	//exisiting method check
 			return false;
 		String[] expectedArgs = methodsTable.get(methodName).getMethodArgTypes();

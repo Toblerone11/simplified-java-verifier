@@ -47,7 +47,6 @@ public class MethodReader extends LocalScope {
 	@Override
 	public void readDeclarationLine(String scopeDeclaration, int lineNum, VarReader varReader)
 			throws LocalScopeException, VariableException {
-		
 //		System.out.println(lineNum + " " + scopeDeclaration);
 		/* extract the return type and name of the method */
 		matcher = methodPattern.matcher(scopeDeclaration);
@@ -74,6 +73,14 @@ public class MethodReader extends LocalScope {
 		String[] methodArgTypes = argTypes.toArray(new String[argTypes.size()]);
 		String[] methodArgNames = argNames.toArray(new String[argNames.size()]);
 		methodsTable.put(name, new Method(type, name, methodArgTypes, methodArgNames));
+	}
+	
+	public BufferedReader checkScope(String currentLine, BufferedReader bReader, int lineNum)
+			throws IOException, ReaderUnknownRowException, LocalScopeException, VariableException {
+		
+		/* checks the declaration of the scope */	
+		readDeclarationLine(currentLine, lineNum, varReader);
+		return super.checkScope(currentLine, bReader, lineNum);
 	}
 	
 	/**
@@ -119,4 +126,6 @@ public class MethodReader extends LocalScope {
 			varReader.analyzeLine(toAdd, tempVarMatcher, lineNum);
 		}
 	}
+	
+	
 }

@@ -63,7 +63,6 @@ public class Tools {
 		}
 	}
 	
-	
 	// CheckLine's function assistant functions - BEGINNING //
 	
 	/**

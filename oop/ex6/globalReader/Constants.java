@@ -47,7 +47,7 @@ public class Constants {
 	public static final String LEGAL_RETURN_TYPE = "void";
 	public static final String METHOD_PATTERN =
 							OPT_SPACE + "(" + LEGAL_RETURN_TYPE + ")" + 
-							SPACE + "(" + LEGAL_NAME + ")" + 
+							SPACE + "(" + LEGAL_NAME + ")" + OPT_SPACE + 
 							"\\((.*)\\)";
 	public static final String METHOD_ARG = "(" + LEGAL_TYPE + SPACE + LEGAL_NAME + ")";
 	public static final String LEGAL_DECLARATION = "\\(" + "("
@@ -66,18 +66,12 @@ public class Constants {
 	public static final String METHOD_CALL_ARG = "(" + "(?:" + LEGAL_NAME + "|" + NUMBER + ")" + ")";
 	
 	public static final String METHOD_RECOGNIZER =
-			OPT_SPACE + LEGAL_RETURN_TYPE + SPACE + LEGAL_NAME + LEGAL_DECLARATION + OPT_SPACE + "\\{";
+			OPT_SPACE + LEGAL_RETURN_TYPE + SPACE + LEGAL_NAME + OPT_SPACE + LEGAL_DECLARATION + OPT_SPACE + "\\{" + OPT_SPACE;
 	
 	//if / while regex
 	public static final String CONDITION = "((?:\\s*(?:" + LEGAL_NAME + "|" + NUMBER + ")+\\s*(?:\\|\\||&&))*\\s*(?:" + LEGAL_NAME + "|" + NUMBER + ")\\s*)";
-	public static final String COND_DECLARE = "\\s*(?:if|while)?+\\s*\\(" + CONDITION + "\\)\\s*\\{";
-	
-	
-	public String b = "\\s*(?:(final)\\s+)\\b(int|String|double|char|boolean){1}?\\b((?:\\s*(?:_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)\\s*(?:=(?:\\s*(?:[^," + '"' + ";\\s]++|[" + '"' + "][^" + '"' + "]++[" + '"' + "])+))?\\s*,)*)\\s*(?:(_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)\\s*(?:=(?:\\s*([^," + '"' + ";\\s]+|[" + '"' + "][^" + '"' + "]++[" + '"' + "])+))?\\s*);";
-//	public String c = "\s*\b(int|String|double|char|boolean){1}?\b((?:\s*(?:_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)\s*(?:=(?:\s*(?:[^,";\s]++|["][^"]++["])+))?\s*,)*)\s*(?:(_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)\s*(?:=(?:\s*([^,";\s]+|["][^"]++["])+))?\s*);"
-	
-	public String c = "(?:\\s*(final)\\s+)?\\b(int|String|double|char|boolean){1}?\\b((?:\\s*(?:_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)\\s*(?:=(?:\\s*(?:[^," + '"' + ";\\s]++|[" + '"' + "][^" + '"' + "]++[" + '"' + "])+))?\\s*,)*)\\s*(?:(_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)\\s*(?:=(?:\\s*([^," + '"' + ";\\s]+|[" + '"' + "][^" + '"' + "]++[" + '"' + "])+))?\\s*);";
-	
-	public String d = "(?:(_[A-Za-z0-9_]+|[A-Za-z][A-Za-z0-9_]*)+\\s*,)*";
+	public static final String COND_DECLARE = "\\s*(?:if|while)?+\\s*\\(" + CONDITION + "\\)\\s*\\{" + OPT_SPACE;
 }
+	
+
 
